@@ -4,5 +4,7 @@ project(cmake_template)
 
 set(CMAKE_CXX_STANDARD 17)
 
+enable_testing()
+
 add_subdirectory(library)
 add_subdirectory(executable)
