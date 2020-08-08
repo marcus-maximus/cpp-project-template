@@ -1,4 +1,6 @@
+#include <library.h>
+
 int main()
 {
-	return 0;
+	return add(1, 1) == 2 ? 0 : 1;
 }
