@@ -1,6 +1,9 @@
+#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
+#include "catch.hpp"
+
 #include <library.h>
 
-int main()
+TEST_CASE( "One plus one", "[add]" )
 {
-	return add(1, 1) == 2 ? 0 : 1;
+	REQUIRE(add(1, 1) == 2);
 }
