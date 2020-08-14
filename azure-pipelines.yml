@@ -18,7 +18,7 @@ stages:
     - script: echo Build
 - stage: test
   displayName: test
-    jobs:
+  jobs:
   - job: test
     steps:
     - script echo Test
