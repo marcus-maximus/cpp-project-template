@@ -21,4 +21,4 @@ stages:
   jobs:
   - job: test
     steps:
-    - script echo Test
+    - script: echo Test
