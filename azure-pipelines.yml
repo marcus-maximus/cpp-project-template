@@ -12,9 +12,13 @@ pool:
 stages:
 - stage: build
   displayName: Build
-  steps:
-  - script: echo Build
+  jobs:
+  - job: build
+    steps:
+    - script: echo Build
 - stage: test
   displayName: test
-  steps:
-  - script echo Test
+    jobs:
+  - job: test
+    steps:
+    - script echo Test
