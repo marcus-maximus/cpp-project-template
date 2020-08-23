@@ -15,10 +15,11 @@ stages:
   jobs:
   - job: build
     steps:
-    - script: echo Build
+    - pwsh: ./bootstrap.ps1
+    - pwsh: ./build.ps1
 - stage: test
-  displayName: test
+  displayName: Test
   jobs:
   - job: test
     steps:
-    - script: echo Test
+    - pwsh: cd build && ctest
