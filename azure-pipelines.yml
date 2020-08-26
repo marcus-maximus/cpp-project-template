@@ -9,13 +9,10 @@ pr:
 pool:
   vmImage: 'ubuntu-latest'
 
-jobs:
-- job: build
+steps:
+- pwsh: ./bootstrap.ps1
+  displayName: Bootstrap
+- pwsh: ./build.ps1
   displayName: Build
-  steps:
-  - pwsh: ./bootstrap.ps1
-  - pwsh: ./build.ps1
-- job: test
+- pwsh: cd build && ctest
   displayName: Test
-  steps:
-  - pwsh: cd build && ctest
