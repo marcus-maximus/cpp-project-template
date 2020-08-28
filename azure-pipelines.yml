@@ -6,8 +6,15 @@ trigger:
 pr:
 - master
 
+strategy:
+  matrix:
+    windows:
+      imageName: 'windows-latest'
+    linux:
+      imageName: 'ubuntu-latest'
+
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: $(imageName)
 
 steps:
 - pwsh: ./bootstrap.ps1
