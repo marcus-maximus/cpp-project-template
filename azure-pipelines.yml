@@ -1,0 +1,25 @@
+# Azure pipeline reference: https://aka.ms/yaml
+
+trigger:
+- master
+
+pr:
+- master
+
+strategy:
+  matrix:
+    windows:
+      imageName: 'windows-latest'
+    linux:
+      imageName: 'ubuntu-latest'
+
+pool:
+  vmImage: $(imageName)
+
+steps:
+- pwsh: ./bootstrap.ps1
+  displayName: Bootstrap
+- pwsh: ./build.ps1
+  displayName: Build
+- pwsh: cd build && ctest
+  displayName: Test
