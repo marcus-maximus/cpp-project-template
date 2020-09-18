@@ -10,4 +10,4 @@ Features:
 The c++ example code consists of a library and an executable linking the library. To build the project call ```bootstrap.ps1``` and then ```build.ps1```.
 
 # CI status
-[![Build Status](https://dev.azure.com/marcus-schaber/cpp_project_template/_apis/build/status/marcus-maximus.cpp-project-template?branchName=rapidcheck)](https://dev.azure.com/marcus-schaber/cpp_project_template/_build/latest?definitionId=8&branchName=rapidcheck)
+[![Build Status](https://dev.azure.com/marcus-schaber/cpp_project_template/_apis/build/status/marcus-maximus.cpp-project-template?branchName=master)](https://dev.azure.com/marcus-schaber/cpp_project_template/_build/latest?definitionId=8&branchName=master)
