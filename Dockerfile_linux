@@ -1,0 +1,14 @@
+FROM mcr.microsoft.com/powershell:ubuntu-20.04
+
+RUN apt-get update && \
+    apt-get install -y git g++ cmake curl unzip tar
+
+RUN useradd -m build
+USER build
+
+WORKDIR /home/build
+
+COPY --chown=build ./bootstrap.ps1 .
+RUN pwsh -File ./bootstrap.ps1
+
+CMD ["pwsh"]
