@@ -1,0 +1,10 @@
+FROM marcusmaximus/msvc-buildtools:2019-servercore-ltsc2019
+
+RUN choco install -y pwsh
+
+SHELL ["pwsh", "-Command"]
+
+WORKDIR C:\\project
+
+COPY .\\bootstrap.ps1 .
+RUN pwsh -File .\\bootstrap.ps1
