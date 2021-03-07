@@ -11,4 +11,5 @@ WORKDIR /home/build
 COPY --chown=build ./bootstrap.ps1 .
 RUN pwsh -File ./bootstrap.ps1
 
+ENTRYPOINT ["pwsh", "-NoLogo", "-Command"]
 CMD ["pwsh"]
