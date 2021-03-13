@@ -28,4 +28,4 @@ function Invoke-Container($command) {
         $command
 }
 
-Invoke-Container "cd $ProjectPath && ./build.ps1 -ToolChainFile $ToolChainFile"
+Invoke-Container "cd $ProjectPath && ./Build.ps1 -ToolChainFile $ToolChainFile"
