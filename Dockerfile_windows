@@ -14,8 +14,8 @@ USER ContainerUser
 
 WORKDIR C:\\Users\\ContainerUser
 
-COPY .\\bootstrap.ps1 .
-RUN pwsh -File .\\bootstrap.ps1
+COPY .\\Bootstrap.ps1 .
+RUN pwsh -File .\\Bootstrap.ps1
 
 ENTRYPOINT ["C:\\BuildTools\\Common7\\Tools\\VsDevCmd.bat", "&&", "pwsh", "-NoLogo", "-Command"]
 CMD ["pwsh"]
