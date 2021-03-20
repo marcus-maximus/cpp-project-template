@@ -17,27 +17,48 @@ strategy:
 pool:
   vmImage: $(imageName)
 
-steps:
-- task: Cache@2
-  inputs:
-    key: '"docker" | "$(Agent.OS)" | Dockerfile_windows | Dockerfile_linux'
-    path: $(Pipeline.Workspace)/docker
-    cacheHitVar: DOCKER_CACHE_RESTORED
-  displayName: Caching Docker image
+jobs:
+- job:
+  displayName: Build (Native)
+  steps:
+  - task: Cache@2
+    inputs:
+      key: 'vcpkg | "$(Agent.OS)"'
+      path: $(Pipeline.Workspace)/vcpkg
+      cacheHitVar: DOCKER_CACHE_RESTORED
+    displayName: Caching vcpkg
+  - pwsh: ./Bootstrap.ps1
+    displayName: Boostrap
+    condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
+  - pwsh: ./Build.ps1
+    displayName: Build
+  - pwsh: cd build && ctest
+    displayName: Test
 
-- pwsh: |
-      docker load < $(Pipeline.Workspace)/cache.tar
-  condition: and(not(canceled()), eq(variables.DOCKER_CACHE_RESTORED, 'true'))
-  displayName: Load Docker image
+- job:
+  displayName: Build (Container)
+  condition: false
+  steps:
+  - task: Cache@2
+    inputs:
+      key: '"docker" | "$(Agent.OS)" | Dockerfile_windows | Dockerfile_linux'
+      path: $(Pipeline.Workspace)/docker
+      cacheHitVar: DOCKER_CACHE_RESTORED
+    displayName: Caching Docker image
 
-- pwsh: |
-    ./BuildImage.ps1 -ImageName cpp-project-build
-    docker save cpp-project-build > $(Pipeline.Workspace)/cache.tar
-  condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
-  displayName: Build Docker image
+  - pwsh: |
+        docker load < $(Pipeline.Workspace)/cache.tar
+    condition: and(not(canceled()), eq(variables.DOCKER_CACHE_RESTORED, 'true'))
+    displayName: Load Docker image
 
-- pwsh: ./BuildContainerized.ps1
-  displayName: Build
+  - pwsh: |
+      ./BuildImage.ps1 -ImageName cpp-project-build
+      docker save cpp-project-build > $(Pipeline.Workspace)/cache.tar
+    condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
+    displayName: Build Docker image
 
-- pwsh: cd build && ctest
-  displayName: Test
+  - pwsh: ./BuildContainerized.ps1
+    displayName: Build
+
+  - pwsh: cd build && ctest
+    displayName: Test
