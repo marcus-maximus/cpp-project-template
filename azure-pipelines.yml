@@ -7,18 +7,16 @@ trigger:
 pr:
 - master
 
-strategy:
-  matrix:
-    windows:
-      imageName: 'windows-latest'
-    linux:
-      imageName: 'ubuntu-latest'
-
-pool:
-  vmImage: $(imageName)
-
 jobs:
 - job:
+  strategy:
+    matrix:
+      windows:
+        imageName: 'windows-latest'
+      linux:
+        imageName: 'ubuntu-latest'
+  pool:
+    vmImage: $(imageName)
   displayName: Build (Native)
   steps:
   - task: Cache@2
@@ -36,6 +34,14 @@ jobs:
     displayName: Test
 
 - job:
+  strategy:
+    matrix:
+      windows:
+        imageName: 'windows-latest'
+      linux:
+        imageName: 'ubuntu-latest'
+  pool:
+    vmImage: $(imageName)
   displayName: Build (Container)
   condition: false
   steps:
@@ -45,20 +51,16 @@ jobs:
       path: $(Pipeline.Workspace)/docker
       cacheHitVar: DOCKER_CACHE_RESTORED
     displayName: Caching Docker image
-
   - pwsh: |
         docker load < $(Pipeline.Workspace)/cache.tar
     condition: and(not(canceled()), eq(variables.DOCKER_CACHE_RESTORED, 'true'))
     displayName: Load Docker image
-
   - pwsh: |
       ./BuildImage.ps1 -ImageName cpp-project-build
       docker save cpp-project-build > $(Pipeline.Workspace)/cache.tar
     condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
     displayName: Build Docker image
-
   - pwsh: ./BuildContainerized.ps1
     displayName: Build
-
   - pwsh: cd build && ctest
     displayName: Test
