@@ -54,7 +54,6 @@ jobs:
     pool:
       vmImage: $(imageName)
     displayName: Build (Container)
-    condition: false
     steps:
     - task: Cache@2
       inputs:
