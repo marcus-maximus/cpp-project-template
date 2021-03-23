@@ -7,60 +7,71 @@ trigger:
 pr:
 - master
 
-jobs:
-- job:
-  strategy:
-    matrix:
-      windows:
-        imageName: 'windows-latest'
-      linux:
-        imageName: 'ubuntu-latest'
-  pool:
-    vmImage: $(imageName)
-  displayName: Build (Native)
-  steps:
-  - task: Cache@2
-    inputs:
-      key: 'vcpkg | "$(Agent.OS)"'
-      path: $(Build.Repository.LocalPath)/vcpkg
-      cacheHitVar: DOCKER_CACHE_RESTORED
-    displayName: Caching vcpkg
-  - pwsh: ./Bootstrap.ps1
-    displayName: Boostrap
-    condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
-  - pwsh: ./Build.ps1
-    displayName: Build
-  - pwsh: cd build && ctest
-    displayName: Test
+parameters:
+- name: buildType
+  displayName: Native or containerized build
+  type: string
+  default: native
+  values:
+  - native
+  - container
 
-- job:
-  strategy:
-    matrix:
-      windows:
-        imageName: 'windows-latest'
-      linux:
-        imageName: 'ubuntu-latest'
-  pool:
-    vmImage: $(imageName)
-  displayName: Build (Container)
-  condition: false
-  steps:
-  - task: Cache@2
-    inputs:
-      key: '"docker_cache" | "$(Agent.OS)" | Dockerfile_windows | Dockerfile_linux'
-      path: $(Pipeline.Workspace)/cache.tar
-      cacheHitVar: DOCKER_CACHE_RESTORED
-    displayName: Caching Docker image
-  - pwsh: |
-        docker load < $(Pipeline.Workspace)/cache.tar
-    condition: and(not(canceled()), eq(variables.DOCKER_CACHE_RESTORED, 'true'))
-    displayName: Load Docker image
-  - pwsh: |
-      ./BuildImage.ps1 -ImageName cpp-project-build
-      docker save cpp-project-build > $(Pipeline.Workspace)/cache.tar
-    condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
-    displayName: Build Docker image
-  - pwsh: ./BuildContainerized.ps1
-    displayName: Build
-  - pwsh: cd build && ctest
-    displayName: Test
+jobs:
+- ${{ if contains(parameters.buildType, 'native') }}:
+  - job:
+    strategy:
+      matrix:
+        windows:
+          imageName: 'windows-latest'
+        linux:
+          imageName: 'ubuntu-latest'
+    pool:
+      vmImage: $(imageName)
+    displayName: Build (Native)
+    steps:
+    - task: Cache@2
+      inputs:
+        key: 'vcpkg | "$(Agent.OS)"'
+        path: $(Build.Repository.LocalPath)/vcpkg
+        cacheHitVar: DOCKER_CACHE_RESTORED
+      displayName: Caching vcpkg
+    - pwsh: ./Bootstrap.ps1
+      displayName: Boostrap
+      condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
+    - pwsh: ./Build.ps1
+      displayName: Build
+    - pwsh: cd build && ctest
+      displayName: Test
+
+- ${{ if contains(parameters.buildType, 'container') }}:
+  - job:
+    strategy:
+      matrix:
+        windows:
+          imageName: 'windows-latest'
+        linux:
+          imageName: 'ubuntu-latest'
+    pool:
+      vmImage: $(imageName)
+    displayName: Build (Container)
+    condition: false
+    steps:
+    - task: Cache@2
+      inputs:
+        key: '"docker_cache" | "$(Agent.OS)" | Dockerfile_windows | Dockerfile_linux'
+        path: $(Pipeline.Workspace)/cache.tar
+        cacheHitVar: DOCKER_CACHE_RESTORED
+      displayName: Caching Docker image
+    - pwsh: |
+          docker load < $(Pipeline.Workspace)/cache.tar
+      condition: and(not(canceled()), eq(variables.DOCKER_CACHE_RESTORED, 'true'))
+      displayName: Load Docker image
+    - pwsh: |
+        ./BuildImage.ps1 -ImageName cpp-project-build
+        docker save cpp-project-build > $(Pipeline.Workspace)/cache.tar
+      condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
+      displayName: Build Docker image
+    - pwsh: ./BuildContainerized.ps1
+      displayName: Build
+    - pwsh: cd build && ctest
+      displayName: Test
