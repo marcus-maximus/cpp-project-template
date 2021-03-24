@@ -54,10 +54,15 @@ jobs:
     pool:
       vmImage: $(imageName)
     displayName: Build (Container)
+    variables:
+      ${{ if eq(variables.Agent.OS, 'Windows_NT') }}:
+        Dockerfile: Dockerfile_windows
+      ${{ if eq(variables.Agent.OS, 'Linux') }}:
+        Dockerfile: Dockerfile_linux
     steps:
     - task: Cache@2
       inputs:
-        key: '"docker_cache" | "$(Agent.OS)" | Dockerfile_windows | Dockerfile_linux'
+        key: '"docker_cache" | "$(Agent.OS)" | "$(Dockerfile)"'
         path: $(Pipeline.Workspace)/cache.tar
         cacheHitVar: DOCKER_CACHE_RESTORED
       displayName: Caching Docker image

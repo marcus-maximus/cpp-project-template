@@ -4,7 +4,7 @@ param(
 
     [String]
     [ValidateSet("Windows", "Linux")]
-    $ContainerOS = $isWindows ? "Windows" : "Linux"
+    $ContainerOS = $isWindows ? "Windows" : "Linux",
 
     [String]
     $HostProjectPath = $PWD
