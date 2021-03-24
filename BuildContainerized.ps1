@@ -5,6 +5,9 @@ param(
     [String]
     [ValidateSet("Windows", "Linux")]
     $ContainerOS = $isWindows ? "Windows" : "Linux"
+
+    [String]
+    $HostProjectPath = $PWD
 )
 
 
@@ -23,7 +26,7 @@ switch ($ContainerOS) {
 function Invoke-Container($command) {
     docker run `
         --rm `
-        -v ${PWD}:${ProjectPath} `
+        -v ${HostProjectPath}:${ProjectPath} `
         $ImageName `
         $command
 }

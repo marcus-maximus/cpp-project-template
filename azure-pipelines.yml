@@ -70,7 +70,7 @@ jobs:
         docker save cpp-project-build > $(Pipeline.Workspace)/cache.tar
       condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
       displayName: Build Docker image
-    - pwsh: ./BuildContainerized.ps1
+    - pwsh: ./BuildContainerized.ps1 -HostProjectPath $(Build.Repository.LocalPath)
       displayName: Build
     - pwsh: cd build && ctest
       displayName: Test
