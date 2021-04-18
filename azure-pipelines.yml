@@ -54,28 +54,10 @@ jobs:
     pool:
       vmImage: $(imageName)
     displayName: Build (Container)
-    variables:
-      ${{ if eq(variables.Agent.OS, 'Windows_NT') }}:
-        Dockerfile: Dockerfile_windows
-      ${{ if eq(variables.Agent.OS, 'Linux') }}:
-        Dockerfile: Dockerfile_linux
     steps:
-    - task: Cache@2
-      inputs:
-        key: '"docker_cache" | "$(Agent.OS)" | "$(Dockerfile)"'
-        path: $(Pipeline.Workspace)/cache.tar
-        cacheHitVar: DOCKER_CACHE_RESTORED
-      displayName: Caching Docker image
-    - pwsh: |
-          docker load < $(Pipeline.Workspace)/cache.tar
-      condition: and(not(canceled()), eq(variables.DOCKER_CACHE_RESTORED, 'true'))
-      displayName: Load Docker image
-    - pwsh: |
-        ./BuildImage.ps1 -ImageName cpp-project-build
-        docker save cpp-project-build > $(Pipeline.Workspace)/cache.tar
-      condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
+    - pwsh: ./BuildImage.ps1
       displayName: Build Docker image
-    - pwsh: ./BuildContainerized.ps1 -HostProjectPath $(Build.Repository.LocalPath)
+    - pwsh: ./BuildContainerized.ps1
       displayName: Build
     - pwsh: cd build && ctest
       displayName: Test
