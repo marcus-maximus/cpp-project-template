@@ -3,7 +3,7 @@ param(
     $ImageName = "cpp-project-build",
 
     [String]
-    $Dockerfile = $isWindows ? "Dockerfile_windows" : "Dockerfile_linux"
+    $Dockerfile = $IsWindows ? "Dockerfile_windows" : "Dockerfile_linux"
 )
 
 docker build -t $ImageName -f $Dockerfile .

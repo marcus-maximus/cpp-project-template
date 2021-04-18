@@ -57,7 +57,7 @@ jobs:
     steps:
     - pwsh: ./BuildImage.ps1
       displayName: Build Docker image
-    - pwsh: ./BuildContainerized.ps1
+    - pwsh: ./BuildContainerized.ps1 -HostSourceDirectory $(Build.SourcesDirectory) -HostBuildDirectory $(Build.BinariesDirectory)
       displayName: Build
     - pwsh: cd build && ctest
       displayName: Test

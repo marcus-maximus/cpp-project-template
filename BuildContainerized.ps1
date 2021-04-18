@@ -7,7 +7,10 @@ param(
     $ContainerOS = $isWindows ? "Windows" : "Linux",
 
     [String]
-    $HostProjectPath = $PWD
+    $HostSourceDirectory = "$PWD",
+
+    [String]
+    $HostBuildDirectory = "$PWD/build"
 )
 
 
@@ -26,7 +29,8 @@ switch ($ContainerOS) {
 function Invoke-Container($command) {
     docker run `
         --rm `
-        -v ${HostProjectPath}:${ProjectPath} `
+        -v ${HostSourceDirectory}:${ProjectPath} `
+        -v ${HostBuildDirectory}:${ProjectPath}/build `
         $ImageName `
         $command
 }
