@@ -22,6 +22,10 @@ if($isWindows) {
     $AdditionalBuildArguments = ""
 }
 
-New-Item $BuildDirectory -ItemType Directory -ErrorAction Continue
+
+if (!(Test-Path -Path $BuildDirectory)) {
+    New-Item $BuildDirectory -ItemType Directory
+}
+
 cmake -S $SourceDirectory -B $BuildDirectory -D CMAKE_BUILD_TYPE=$BuildType -D CMAKE_TOOLCHAIN_FILE=$ToolChainFile $AdditionalConfigureArguments
 cmake --build $BuildDirectory $AdditionalBuildArguments

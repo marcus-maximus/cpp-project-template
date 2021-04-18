@@ -35,4 +35,8 @@ function Invoke-Container($command) {
         $command
 }
 
+if (!(Test-Path -Path $HostBuildDirectory)) {
+    New-Item $HostBuildDirectory -ItemType Directory
+}
+
 Invoke-Container "cd $ProjectPath && ./Build.ps1 -ToolChainFile $ToolChainFile"
