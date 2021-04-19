@@ -2,7 +2,6 @@
 
 trigger:
 - master
-- container_build
 
 pr:
 - master
