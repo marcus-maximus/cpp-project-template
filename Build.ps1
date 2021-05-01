@@ -18,7 +18,7 @@ if($isWindows) {
 	$AdditionalConfigureArguments = "-G", "Visual Studio 16 2019",  "-A", "x64"
     $AdditionalBuildArguments = "--config", "$BuildType"
 } elseif($isLinux) {
-    $CMakeConfigureAruments = "-G", "Unix Makefiles"
+    $AdditionalConfigureArguments = "-G", "Unix Makefiles"
     $AdditionalBuildArguments = ""
 }
 

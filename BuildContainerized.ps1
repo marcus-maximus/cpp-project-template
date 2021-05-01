@@ -16,8 +16,8 @@ param(
 
 switch ($ContainerOS) {
     Windows {
-        $ToolChainFile = "C:\Users\ContainerUser\vcpkg\scripts\buildsystems\vcpkg.cmake"
-        $ProjectPath = "C:\Users\ContainerUser\cpp-project"
+        $ToolChainFile = "C:\cpp-project\vcpkg\scripts\buildsystems\vcpkg.cmake"
+        $ProjectPath = "C:\cpp-project\cpp-project"
     }
 
     Linux {

@@ -10,9 +10,8 @@ RUN choco install -y pwsh && \
 
 SHELL ["pwsh", "-NoLogo", "-Command"]
 
-USER ContainerUser
-
-WORKDIR C:\\Users\\ContainerUser
+#USER ContainerUser
+WORKDIR C:\\cpp-project
 
 COPY .\\Bootstrap.ps1 .
 RUN pwsh -File .\\Bootstrap.ps1
