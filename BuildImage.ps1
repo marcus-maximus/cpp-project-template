@@ -6,4 +6,8 @@ param(
     $Dockerfile = $IsWindows ? "Dockerfile_windows" : "Dockerfile_linux"
 )
 
-docker build -t $ImageName -f $Dockerfile .
+if($isLinux) {
+    $AdditionalArguments = "--build-arg", "USER_ID=$(id -u)", "--build-arg", "GROUP_ID=$(id -g)"
+}
+
+docker build -t $ImageName -f $Dockerfile $AdditionalArguments .
