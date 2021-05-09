@@ -58,7 +58,8 @@ jobs:
     - name: dockerImageName
       value: marcusmaximus/cpp-project-build:$(VMImageName)
     steps:
-    - pwsh: $(dockerhub_password) | docker login --username $(dockerhub_username) --password-stdin
+    - pwsh: |
+        '$(dockerhub_password)' | docker login --username '$(dockerhub_username)' --password-stdin
       displayName: Login to Docker Hub
     - pwsh: docker pull $(dockerImageName)
       displayName: Pull image
