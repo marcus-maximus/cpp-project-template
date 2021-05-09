@@ -47,16 +47,28 @@ jobs:
     strategy:
       matrix:
         windows:
-          imageName: 'windows-latest'
+          VMImageName: 'windows-latest'
         linux:
-          imageName: 'ubuntu-latest'
+          VMImageName: 'ubuntu-latest'
     pool:
-      vmImage: $(imageName)
+      vmImage: $(VMImageName)
     displayName: Build (Container)
+    variables:
+    - group: Docker Hub
+    - name: dockerImageName
+      value: marcusmaximus/cpp-project-build:$(VMImageName)
     steps:
-    - pwsh: ./BuildImage.ps1
+    - pwsh: $env:DOCKERHUB_PASSWORD | docker login --username $env:DOCKERHUB_USERNAME --password-stdin
+      displayName: Login to Docker Hub
+    - pwsh: docker pull $(dockerImageName)
+      displayName: Pull image
+    - pwsh: ./BuildImage.ps1 -ImageName $(dockerImageName)
       displayName: Build Docker image
-    - pwsh: ./BuildContainerized.ps1 -HostSourceDirectory $(Build.SourcesDirectory) -HostBuildDirectory $(Build.BinariesDirectory)
+    - pwsh: docker push $(dockerImageName)
+      displayName: Push image
+    - pwsh: docker logout
+      displayName: Logout from Docker Hub
+    - pwsh: ./BuildContainerized.ps1 -ImageName $(dockerImageName) -HostSourceDirectory $(Build.SourcesDirectory) -HostBuildDirectory $(Build.BinariesDirectory)
       displayName: Build
     - pwsh: cd $(Build.BinariesDirectory) && ctest
       displayName: Test
