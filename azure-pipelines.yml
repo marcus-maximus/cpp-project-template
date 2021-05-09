@@ -54,11 +54,11 @@ jobs:
       vmImage: $(VMImageName)
     displayName: Build (Container)
     variables:
-    - group: Docker Hub
+    - group: docker-hub
     - name: dockerImageName
       value: marcusmaximus/cpp-project-build:$(VMImageName)
     steps:
-    - pwsh: $env:DOCKERHUB_PASSWORD | docker login --username $env:DOCKERHUB_USERNAME --password-stdin
+    - pwsh: $(dockerhub_password) | docker login --username $(dockerhub_username) --password-stdin
       displayName: Login to Docker Hub
     - pwsh: docker pull $(dockerImageName)
       displayName: Pull image
