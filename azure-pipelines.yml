@@ -61,7 +61,7 @@ jobs:
     - pwsh: |
         '$(dockerhub_password)' | docker login --username '$(dockerhub_username)' --password-stdin
       displayName: Login to Docker Hub
-    - pwsh: docker pull $(dockerImageName)
+    - pwsh: docker pull $(dockerImageName) || Write-Output "No chached image found."; exit 0
       displayName: Pull image
     - pwsh: ./BuildImage.ps1 -ImageName $(dockerImageName)
       displayName: Build Docker image
