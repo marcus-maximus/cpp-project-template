@@ -6,11 +6,11 @@ param(
     $Dockerfile = $IsWindows ? "Dockerfile_windows" : "Dockerfile_linux",
 
     [Parameter(Position=2, ValueFromRemainingArguments)]
-    $RemainingArguments
+    $CustomDockerArguments
 )
 
 if($isLinux) {
     $AdditionalArguments = "--build-arg", "USER_ID=$(id -u)", "--build-arg", "GROUP_ID=$(id -g)"
 }
 
-docker build -t $ImageName -f $Dockerfile $AdditionalArguments $RemainingArguments .
+docker build -t $ImageName -f $Dockerfile $AdditionalArguments $CustomDockerArguments .
