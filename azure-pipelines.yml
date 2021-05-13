@@ -37,9 +37,9 @@ jobs:
     - pwsh: ./Bootstrap.ps1
       displayName: Boostrap
       condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
-    - pwsh: ./Build.ps1
+    - pwsh: ./Build.ps1 -SourceDirectory $(Build.SourcesDirectory) -BuildDirectory $(Build.BinariesDirectory)
       displayName: Build
-    - pwsh: cd build && ctest
+    - pwsh: cd $(Build.BinariesDirectory) && ctest
       displayName: Test
 
 - ${{ if contains(parameters.buildType, 'container') }}:
