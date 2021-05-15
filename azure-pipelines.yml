@@ -6,20 +6,70 @@ trigger:
 pr:
 - master
 
-strategy:
-  matrix:
-    windows:
-      imageName: 'windows-latest'
-    linux:
-      imageName: 'ubuntu-latest'
+parameters:
+- name: buildType
+  displayName: Native or containerized build
+  type: string
+  default: native
+  values:
+  - native
+  - container
 
-pool:
-  vmImage: $(imageName)
+jobs:
+- ${{ if contains(parameters.buildType, 'native') }}:
+  - job:
+    strategy:
+      matrix:
+        windows:
+          imageName: 'windows-latest'
+        linux:
+          imageName: 'ubuntu-latest'
+    pool:
+      vmImage: $(imageName)
+    displayName: Build (Native)
+    steps:
+    - task: Cache@2
+      inputs:
+        key: 'vcpkg | "$(Agent.OS)"'
+        path: $(Build.Repository.LocalPath)/vcpkg
+        cacheHitVar: DOCKER_CACHE_RESTORED
+      displayName: Caching vcpkg
+    - pwsh: ./Bootstrap.ps1
+      displayName: Boostrap
+      condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
+    - pwsh: ./Build.ps1 -SourceDirectory $(Build.SourcesDirectory) -BuildDirectory $(Build.BinariesDirectory)
+      displayName: Build
+    - pwsh: cd $(Build.BinariesDirectory) && ctest
+      displayName: Test
 
-steps:
-- pwsh: ./bootstrap.ps1
-  displayName: Bootstrap
-- pwsh: ./build.ps1
-  displayName: Build
-- pwsh: cd build && ctest
-  displayName: Test
+- ${{ if contains(parameters.buildType, 'container') }}:
+  - job:
+    strategy:
+      matrix:
+        windows:
+          VMImageName: 'windows-latest'
+        linux:
+          VMImageName: 'ubuntu-latest'
+    pool:
+      vmImage: $(VMImageName)
+    displayName: Build (Container)
+    variables:
+    - group: docker-hub
+    - name: dockerImageName
+      value: marcusmaximus/cpp-project-build:$(VMImageName)
+    steps:
+    - pwsh: |
+        '$(dockerhub_password)' | docker login --username '$(dockerhub_username)' --password-stdin
+      displayName: Login to Docker Hub
+    - pwsh: docker pull $(dockerImageName) || Write-Output "No chached image found."; exit 0
+      displayName: Pull image
+    - pwsh: ./BuildImage.ps1 -ImageName $(dockerImageName) --cache-from $(dockerImageName)
+      displayName: Build Docker image
+    - pwsh: docker push $(dockerImageName)
+      displayName: Push image
+    - pwsh: docker logout
+      displayName: Logout from Docker Hub
+    - pwsh: ./BuildContainerized.ps1 -ImageName $(dockerImageName) -HostSourceDirectory $(Build.SourcesDirectory) -HostBuildDirectory $(Build.BinariesDirectory)
+      displayName: Build
+    - pwsh: cd $(Build.BinariesDirectory) && ctest
+      displayName: Test
