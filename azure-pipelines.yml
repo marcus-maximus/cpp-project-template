@@ -27,17 +27,22 @@ jobs:
     pool:
       vmImage: $(imageName)
     displayName: Build (Native)
+    variables:
+      vcpkgPath: $(Build.Repository.LocalPath)/vcpkg
     steps:
     - task: Cache@2
       inputs:
         key: 'vcpkg | "$(Agent.OS)"'
-        path: $(Build.Repository.LocalPath)/vcpkg
-        cacheHitVar: DOCKER_CACHE_RESTORED
+        path: $(vcpkgPath)
+        cacheHitVar: VCPKG_CACHE_RESTORED
       displayName: Caching vcpkg
-    - pwsh: ./Bootstrap.ps1
+    - pwsh: ./Bootstrap.ps1 -VcpkgPath $(vcpkgPath)
       displayName: Boostrap
-      condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_RESTORED, 'true')))
-    - pwsh: ./Build.ps1 -SourceDirectory $(Build.SourcesDirectory) -BuildDirectory $(Build.BinariesDirectory)
+      condition: and(not(canceled()), or(failed(), ne(variables.VCPKG_CACHE_RESTORED, 'true')))
+    - pwsh: |
+        ./Build.ps1 -SourceDirectory $(Build.SourcesDirectory) `
+                    -BuildDirectory $(Build.BinariesDirectory) `
+                    -ToolChainFile $(vcpkgPath)/scripts/buildsystems/vcpkg.cmake
       displayName: Build
     - pwsh: cd $(Build.BinariesDirectory) && ctest
       displayName: Test
@@ -69,7 +74,10 @@ jobs:
       displayName: Push image
     - pwsh: docker logout
       displayName: Logout from Docker Hub
-    - pwsh: ./BuildContainerized.ps1 -ImageName $(dockerImageName) -HostSourceDirectory $(Build.SourcesDirectory) -HostBuildDirectory $(Build.BinariesDirectory)
+    - pwsh: |
+        ./BuildContainerized.ps1 -ImageName $(dockerImageName) `
+                                 -HostSourceDirectory $(Build.SourcesDirectory) `
+                                 -HostBuildDirectory $(Build.BinariesDirectory)
       displayName: Build
     - pwsh: cd $(Build.BinariesDirectory) && ctest
       displayName: Test
