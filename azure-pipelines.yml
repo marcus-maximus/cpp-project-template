@@ -46,6 +46,16 @@ jobs:
       displayName: Build
     - pwsh: cd $(Build.BinariesDirectory) && ctest
       displayName: Test
+    - pwsh: |
+        ./Package.ps1 -BuildDirectory $(Build.BinariesDirectory) `
+                      -PackageDirectory $(Build.BinariesDirectory)/install `
+                      -PackageName $(Build.BinariesDirectory)/cpp-project
+      displayName: Package
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Build.BinariesDirectory)/cpp-project.zip'
+        artifactType: 'pipeline'
+        artifactName: 'cpp-project_$(Agent.OS).zip'
 
 - ${{ if contains(parameters.buildType, 'container') }}:
   - job:
@@ -81,3 +91,13 @@ jobs:
       displayName: Build
     - pwsh: cd $(Build.BinariesDirectory) && ctest
       displayName: Test
+    - pwsh: |
+        ./Package.ps1 -BuildDirectory $(Build.BinariesDirectory) `
+                      -PackageDirectory $(Build.BinariesDirectory)/install `
+                      -PackageName $(Build.BinariesDirectory)/cpp-project
+      displayName: Package
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Build.BinariesDirectory)/cpp-project.zip'
+        artifactType: 'pipeline'
+        artifactName: 'cpp-project_$(Agent.OS).zip'
