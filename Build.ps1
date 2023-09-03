@@ -15,7 +15,7 @@ param(
 
 
 if($isWindows) {
-	$AdditionalConfigureArguments = "-G", "Visual Studio 16 2019",  "-A", "x64"
+	$AdditionalConfigureArguments = "-G", "Visual Studio 17 2022",  "-A", "x64"
     $AdditionalBuildArguments = "--config", "$BuildType"
 } elseif($isLinux) {
     $AdditionalConfigureArguments = "-G", "Unix Makefiles"
