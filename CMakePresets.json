@@ -1,0 +1,77 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "dev-base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "installDir": "${sourceDir}/out/install/${presetName}",
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+    },
+    {
+      "name": "dev-debug",
+      "displayName": "Debug",
+      "inherits": "dev-base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+    },
+    {
+      "name": "dev-release",
+      "displayName": "Release",
+      "inherits": "dev-base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "dev-debug",
+      "displayName": "Debug",
+      "configurePreset": "dev-debug"
+    },
+    {
+      "name": "dev-release",
+      "displayName": "Release",
+      "configurePreset": "dev-release"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "dev-debug",
+      "configurePreset": "dev-debug",
+      "displayName": "Debug",
+      "output": {
+        "outputOnFailure": true,
+        "shortProgress": true
+      }
+    },
+    {
+      "name": "dev-release",
+      "configurePreset": "dev-release",
+      "displayName": "Release",
+      "output": {
+        "outputOnFailure": true,
+        "shortProgress": true
+      }
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "dev-release",
+      "displayName": "Release",
+      "steps": [
+        {
+          "name": "dev-release",
+          "type": "configure"
+        },
+        {
+          "name": "dev-release",
+          "type": "build"
+        },
+        {
+          "name": "dev-release",
+          "type": "test"
+        }
+      ]
+    }
+  ]
+}
