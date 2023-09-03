@@ -7,9 +7,10 @@ add_test(property_test property_test)
 find_package(Catch2 CONFIG REQUIRED)
 find_package(rapidcheck CONFIG REQUIRED)
 
-target_link_libraries(library_test PRIVATE library)
-target_link_libraries(library_test PRIVATE Catch2::Catch2)
+target_link_libraries(library_test PRIVATE library Catch2::Catch2WithMain)
 
-target_link_libraries(property_test PRIVATE library)
-target_link_libraries(property_test PRIVATE rapidcheck rapidcheck_boost rapidcheck_catch rapidcheck_gmock)
-target_link_libraries(property_test PRIVATE Catch2::Catch2)
+target_link_libraries(property_test PRIVATE 
+	library 
+	Catch2::Catch2WithMain 
+	rapidcheck rapidcheck_boost rapidcheck_catch rapidcheck_gmock
+)

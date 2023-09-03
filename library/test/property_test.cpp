@@ -1,8 +1,6 @@
 #include <rapidcheck.h>
-#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
-#include <catch.hpp>
-
-#include<library.h>
+#include <catch2/catch_test_macros.hpp>
+#include <library.h>
 
 TEST_CASE("add property check", "[add]")
 {
