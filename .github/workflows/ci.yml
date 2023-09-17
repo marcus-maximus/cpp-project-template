@@ -63,11 +63,13 @@ jobs:
       run: ctest --build-config ${{ matrix.build_type }}
 
     - name: Package
+      if: ${{ github.event_name != 'pull_request' && contains(fromJson('["cl", "gcc"]'), matrix.c_compiler) }}
       run: |
         cmake --install ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }} --prefix ${{ steps.strings.outputs.install-output-dir }}
 
     - name: Upload build artifact
+      if: ${{ github.event_name != 'pull_request' && contains(fromJson('["cl", "gcc"]'), matrix.c_compiler) }}
       uses: actions/upload-artifact@v3
       with:
-        name: cpp-project
+        name: cpp-project-${{matrix.os}}
         path: ${{ steps.strings.outputs.install-output-dir }}
