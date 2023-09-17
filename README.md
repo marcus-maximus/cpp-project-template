@@ -14,9 +14,9 @@ Build using cmake:
 cmake -S . -B ./out/build -D CMAKE_TOOLCHAIN_FILE="./vcpkg/scripts/buildsystems/vcpkg.cmake"
 cmake --build ./out/build
 ```
-
 Build using cmake presets:
 ```
 ./scripts/Bootstrap.ps1
 cmake --preset dev-debug && cmake --build --preset dev-debug
 ```
+An existing vcpkg installation can be used by setting the `VCPKG_ROOT` environment variable to the root installation directory.
