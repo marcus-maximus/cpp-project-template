@@ -44,16 +44,16 @@ jobs:
       shell: bash
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+        echo "install-output-dir=${{ github.workspace }}/install" >> "$GITHUB_OUTPUT"
 
     - name: Configure CMake
+      shell: pwsh
       run: >
-        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        cmake -S ${{ github.workspace }} -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
-        -S ${{ github.workspace }}
-      shell: pwsh
 
     - name: Build
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
@@ -61,3 +61,15 @@ jobs:
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: ctest --build-config ${{ matrix.build_type }}
+
+    - name: Package
+      shell: pwsh
+      run: |
+        cmake --install ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }} --prefix ${{ steps.strings.outputs.install-output-dir }}
+        Compress-Archive -Path ${{ steps.strings.outputs.install-output-dir }}/* -DestinationPath "cpp-project.zip" -Force
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: cpp-project
+        path: cpp-project.zip
