@@ -1,19 +1,16 @@
 param (
 	[String]
-	$VcpkgPath = "./vcpkg"
+	$VcpkgPath = "PSScriptPath/../vcpkg"
 )
 
 $setupVcpkg = !(Test-Path -Path $VcpkgPath)
 $vcpkgURL = "https://github.com/microsoft/vcpkg.git"
 
-if($isWindows) {
-	if ($setupVcpkg) {
-		git clone $vcpkgURL $VcpkgPath
+if ($setupVcpkg) {
+	git clone $vcpkgURL $VcpkgPath
+	if($isWindows) {
 		& $VcpkgPath/bootstrap-vcpkg.bat
-	}
-} elseif($isLinux) {
-	if ($setupVcpkg) {
-		git clone $vcpkgURL $VcpkgPath
+	} elseif($isLinux) {
 		sh $VcpkgPath/bootstrap-vcpkg.sh
 	}
 }

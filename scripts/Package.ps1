@@ -1,12 +1,12 @@
 param(
     [String]
-    $PackageDirectory = "install",
+    $PackageDirectory = "$PSScriptRoot/out/install",
 
     [String]
     $PackageName = "cpp-project",
 
     [String]
-    $BuildDirectory = "build",
+    $BuildDirectory = "$PSScriptRoot/out/build",
 
     [String]
     [ValidateSet("Release", "Debug")]
