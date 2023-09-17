@@ -3,10 +3,9 @@ param (
 	$VcpkgPath = "PSScriptPath/../vcpkg"
 )
 
-$setupVcpkg = !(Test-Path -Path $VcpkgPath)
 $vcpkgURL = "https://github.com/microsoft/vcpkg.git"
 
-if ($setupVcpkg) {
+if (!(Test-Path -Path $VcpkgPath)) {
 	git clone $vcpkgURL $VcpkgPath
 	if($isWindows) {
 		& $VcpkgPath/bootstrap-vcpkg.bat
@@ -14,3 +13,4 @@ if ($setupVcpkg) {
 		sh $VcpkgPath/bootstrap-vcpkg.sh
 	}
 }
+$env:VCPKG_ROOT = $VcpkgPath
