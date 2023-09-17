@@ -12,9 +12,12 @@ USER build
 
 WORKDIR /home/build/workspace
 
-COPY --chown=build ./scripts/Bootstrap.ps1 .
-RUN pwsh -Command './Bootstrap.ps1 -VcpkgPath /home/build/workspace/vcpkg \
-    && [Environment]::SetEnvironmentVariable("VCPKG_ROOT", "/home/build/workspace/vcpkg", [System.EnvironmentVariableTarget]::User)'
+SHELL ["pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-Command"]
 
-ENTRYPOINT ["pwsh", "-NoLogo", "-NoProfile", "-Command"]
+COPY --chown=build ./scripts/Bootstrap.ps1 .
+RUN ./Bootstrap.ps1 -VcpkgPath /home/build/workspace/vcpkg
+RUN if (!(Test-Path -Path $PROFILE)) { New-Item -Path $PROFILE -ItemType File -Force }; \
+    Add-Content -Path $PROFILE -Value '$env:VCPKG_ROOT = "/home/build/workspace/vcpkg"'
+
+ENTRYPOINT ["pwsh", "-NoLogo", "-Command"]
 CMD ["pwsh"]

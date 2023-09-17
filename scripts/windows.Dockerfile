@@ -16,11 +16,12 @@ RUN C:\\TEMP\vs_buildtools.exe --quiet --wait --norestart --nocache \
 
 WORKDIR C:\\workspace
 
-SHELL ["pwsh", "-NoLogo", "-NoProfile", "-NonInteractive"]
+SHELL ["pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-Command"]
 
 COPY .\\scripts\\Bootstrap.ps1 .
-RUN .\\Bootstrap.ps1 -VcpkgPath C:\\workspace\\vcpkg && \
-    [Environment]::SetEnvironmentVariable("VCPKG_ROOT", "C:\\workspace\\vcpkg", [System.EnvironmentVariableTarget]::User)
+RUN .\\Bootstrap.ps1 -VcpkgPath C:\\workspace\\vcpkg
+RUN if (!(Test-Path -Path $PROFILE)) { New-Item -Path $PROFILE -ItemType File -Force }; \
+    Add-Content -Path $PROFILE -Value '$env:VCPKG_ROOT = \"C:\\workspace\\vcpkg\"'
 
-ENTRYPOINT ["C:\\BuildTools\\Common7\\Tools\\VsDevCmd.bat", "&&", "pwsh", "-NoLogo", "-NoProfile", "-Command"]
+ENTRYPOINT ["C:\\BuildTools\\Common7\\Tools\\VsDevCmd.bat", "&&", "pwsh", "-NoLogo", "-Command"]
 CMD ["pwsh"]
