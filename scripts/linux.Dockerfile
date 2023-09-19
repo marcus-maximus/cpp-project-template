@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/powershell:ubuntu-22.04
 
 RUN apt-get update && \
-    apt-get install -y git g++ cmake curl unzip tar
+    apt-get install -y git g++ make cmake curl zip unzip tar pkg-config
 
 ARG USER_ID=1000
 ARG GROUP_ID=1000
