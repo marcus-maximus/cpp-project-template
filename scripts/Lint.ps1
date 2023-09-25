@@ -20,7 +20,7 @@ function EditInPlace($Files) {
 
 function GetDiff($File) {
     $formatted = clang-format $File
-    $formatted | git --no-pager diff --no-index -- $File -
+    $formatted | git --no-pager diff --no-index --ignore-cr-at-eol -- $File -
 }
 
 function GetDiffs($Files) {
