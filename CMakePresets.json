@@ -11,8 +11,7 @@
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {
           "enableMicrosoftCodeAnalysis": true,
-          "enableClangTidyCodeAnalysis": true,
-          "clangTidyChecks": "clang-analyzer-*"
+          "enableClangTidyCodeAnalysis": true
         }
       }
     },
