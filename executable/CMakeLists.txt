@@ -1,4 +1,9 @@
-add_executable(executable source/main.cpp)
+add_executable(executable)
+
+target_sources(executable
+	PRIVATE 
+		source/main.cpp
+)
 
 target_compile_features(executable PUBLIC cxx_std_20)
 target_compile_options(executable PRIVATE 
