@@ -17,7 +17,7 @@ target_compile_options(library PRIVATE
 
 install(TARGETS library
     ARCHIVE
-    FILE_SET HEADERS
+    FILE_SET HEADERS DESTINATION include/library
 )
 
 add_subdirectory(test)
