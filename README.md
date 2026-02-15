@@ -31,22 +31,6 @@ The `scripts/` directory contains helper scripts used for common tasks during de
   ```powershell
   ./scripts/Bootstrap.ps1
   ```
-  
-- **`Package.ps1`**  
-  Installs the built files into a packaging directory and creates a ZIP archive. Typical usage:
-  ```powershell
-  ./scripts/Package.ps1 -BuildType Release
-  ```
-  
-- **`RunContainer.ps1`**  
-  Builds and runs a Docker container for consistent build environments. Supports interactive shells or running a command inside the container. Example:
-  ```powershell
-  ./scripts/RunContainer.ps1 -Interactive
-  ```
-  or to run a specific command:
-  ```powershell
-  ./scripts/RunContainer.ps1 -Command "cmake --version"
-  ```
 
 - **`ClangFormat.ps1`**  
   Runs `clang-format` in various modes: check formatting, edit files in place, or show diffs. Example:
@@ -62,6 +46,22 @@ The `scripts/` directory contains helper scripts used for common tasks during de
   or to use the compile commands in Build directory:
   ```powershell
   ./scripts/ClangTidy.ps1 -BuildPath ./out/build/release/
+  ```
+
+- **`Package.ps1`**  
+  Installs the built files into a packaging directory and creates a ZIP archive. Typical usage:
+  ```powershell
+  ./scripts/Package.ps1 -BuildType Release
+  ```
+
+- **`RunContainer.ps1`**  
+  Builds and runs a Docker container for consistent build environments. Supports interactive shells or running a command inside the container. Example:
+  ```powershell
+  ./scripts/RunContainer.ps1 -Interactive
+  ```
+  or to run a specific command:
+  ```powershell
+  ./scripts/RunContainer.ps1 -Command "cmake --version"
   ```
 
 Inspect the individual files for detailed behavior and available parameters.
