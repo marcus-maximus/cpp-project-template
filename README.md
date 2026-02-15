@@ -26,19 +26,19 @@ An existing vcpkg installation can be used by setting the `VCPKG_ROOT` environme
 ## Scripts
 The `scripts/` directory contains helper scripts used for common tasks during development and CI.
 
-- `scripts/Bootstrap.ps1`  
+- **`Bootstrap.ps1`**  
   Clones and bootstraps `vcpkg` if it's not present, and sets `VCPKG_ROOT`. Example:
   ```powershell
   ./scripts/Bootstrap.ps1
   ```
   
-- `scripts/Package.ps1`  
+- **`Package.ps1`**  
   Installs the built files into a packaging directory and creates a ZIP archive. Typical usage:
   ```powershell
-  ./scripts/Package.ps1 -Configuration Release
+  ./scripts/Package.ps1 -BuildType Release
   ```
   
-- `scripts/RunContainer.ps1`  
+- **`RunContainer.ps1`**  
   Builds and runs a Docker container for consistent build environments. Supports interactive shells or running a command inside the container. Example:
   ```powershell
   ./scripts/RunContainer.ps1 -Interactive
@@ -48,18 +48,13 @@ The `scripts/` directory contains helper scripts used for common tasks during de
   ./scripts/RunContainer.ps1 -Command "cmake --version"
   ```
 
-- `scripts/ClangFormat.ps1`  
+- **`ClangFormat.ps1`**  
   Runs `clang-format` in various modes: check formatting, edit files in place, or show diffs. Example:
   ```powershell
-  ./scripts/ClangFormat.ps1 -Check
+  ./scripts/ClangFormat.ps1 -Path .\library\ -Mode Check
   ```
-  to check formatting, or:
-  ```powershell
-  ./scripts/ClangFormat.ps1 -Edit
-  ```
-  to automatically fix formatting.
 
-- `scripts/ClangTidy.ps1`  
+- **`ClangTidy.ps1`**  
   Runs `clang-tidy` against the build's `compile_commands.json` or a list of files. Example:
   ```powershell
   ./scripts/ClangTidy.ps1 -BuildPath ./out/build/release/ -Files "src/file1.cpp,src/file2.cpp"
@@ -69,4 +64,4 @@ The `scripts/` directory contains helper scripts used for common tasks during de
   ./scripts/ClangTidy.ps1 -BuildPath ./out/build/release/
   ```
 
-These scripts are small helpers; inspect the individual files for detailed behavior and available parameters.
+Inspect the individual files for detailed behavior and available parameters.
