@@ -2,7 +2,7 @@
   "version": 6,
   "configurePresets": [
     {
-      "name": "dev-base",
+      "name": "base",
       "hidden": true,
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
@@ -19,21 +19,21 @@
       }
     },
     {
-      "name": "dev-debug",
+      "name": "debug",
       "displayName": "Debug",
-      "inherits": "dev-base",
+      "inherits": "base",
       "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
     },
     {
-      "name": "dev-release",
+      "name": "release",
       "displayName": "Release",
-      "inherits": "dev-base",
+      "inherits": "base",
       "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
     },
     {
-      "name": "dev-release-clang",
+      "name": "release-clang",
       "displayName": "Release Clang",
-      "inherits": "dev-base",
+      "inherits": "base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_CXX_COMPILER": "clang++",
@@ -41,9 +41,9 @@
       }
     },
     {
-      "name": "dev-debug-clang",
+      "name": "debug-clang",
       "displayName": "Debug Clang",
-      "inherits": "dev-base",
+      "inherits": "base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_CXX_COMPILER": "clang++",
@@ -53,7 +53,7 @@
     {
       "name": "clang-tidy",
       "displayName": "Clang-Tidy",
-      "inherits": "dev-base",
+      "inherits": "base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_CXX_COMPILER": "clang++",
@@ -64,20 +64,20 @@
   ],
   "buildPresets": [
     {
-      "name": "dev-debug",
+      "name": "debug",
       "displayName": "Debug",
-      "configurePreset": "dev-debug"
+      "configurePreset": "debug"
     },
     {
-      "name": "dev-release",
+      "name": "release",
       "displayName": "Release",
-      "configurePreset": "dev-release"
+      "configurePreset": "release"
     }
   ],
   "testPresets": [
     {
-      "name": "dev-debug",
-      "configurePreset": "dev-debug",
+      "name": "debug",
+      "configurePreset": "debug",
       "displayName": "Debug",
       "output": {
         "outputOnFailure": true,
@@ -85,8 +85,8 @@
       }
     },
     {
-      "name": "dev-release",
-      "configurePreset": "dev-release",
+      "name": "release",
+      "configurePreset": "release",
       "displayName": "Release",
       "output": {
         "outputOnFailure": true,
@@ -96,19 +96,19 @@
   ],
   "workflowPresets": [
     {
-      "name": "dev-release",
+      "name": "release",
       "displayName": "Release",
       "steps": [
         {
-          "name": "dev-release",
+          "name": "release",
           "type": "configure"
         },
         {
-          "name": "dev-release",
+          "name": "release",
           "type": "build"
         },
         {
-          "name": "dev-release",
+          "name": "release",
           "type": "test"
         }
       ]

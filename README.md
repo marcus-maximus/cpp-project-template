@@ -2,9 +2,9 @@
 This is a template for new c++ projects. It consists of a library and an executable linking the library.
 
 Features:
-- Build process with CMake
-- Testing with catch2 and rapidcheck
-- Manage 3rd party libraries with vcpkg
+- Builds with CMake
+- Tests with catch2 and rapidcheck
+- Manages 3rd party libraries with vcpkg
 - CI with GitHub Actions
 
 ## Build
@@ -17,6 +17,6 @@ cmake --build ./out/build
 Build using cmake presets:
 ```
 ./scripts/Bootstrap.ps1
-cmake --preset dev-debug && cmake --build --preset dev-debug
+cmake --preset debug && cmake --build --preset debug
 ```
-An existing vcpkg installation can be used by setting the `VCPKG_ROOT` environment variable to the root installation directory.
+An existing vcpkg installation can be used by setting the `VCPKG_ROOT` environment variable ([vcpkg documentation](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?pivots=shell-powershell#2---set-up-the-project)).
