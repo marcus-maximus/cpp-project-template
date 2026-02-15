@@ -1,7 +1,13 @@
-FROM mcr.microsoft.com/powershell:ubuntu-22.04
+FROM mcr.microsoft.com/powershell:ubuntu-24.04
 
 RUN apt-get update && \
-    apt-get install -y git g++ make cmake curl zip unzip tar pkg-config
+    apt-get install -y git g++ make ninja-build curl zip unzip tar pkg-config
+
+RUN curl -L -o /tmp/cmake-4.2.3-linux-x86_64.sh \
+    https://github.com/Kitware/CMake/releases/download/v4.2.3/cmake-4.2.3-linux-x86_64.sh && \
+    chmod +x /tmp/cmake-4.2.3-linux-x86_64.sh && \
+    /bin/sh /tmp/cmake-4.2.3-linux-x86_64.sh --skip-license --prefix=/usr/local && \
+    rm -f /tmp/cmake-4.2.3-linux-x86_64.sh
 
 ARG USER_ID=1000
 ARG GROUP_ID=1000

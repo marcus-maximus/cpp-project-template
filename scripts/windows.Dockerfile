@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/windows/servercore:ltsc2022
+FROM mcr.microsoft.com/windows/servercore:ltsc2025
 
 RUN powershell -Command Set-ExecutionPolicy Bypass -Scope Process -Force; \
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; \
@@ -9,10 +9,12 @@ RUN choco install -y pwsh && \
     choco install -y cmake --installargs "ADD_CMAKE_TO_PATH=System" && \
     choco install -y ninja
 
-ADD https://aka.ms/vs/17/release/vs_buildtools.exe C:\\TEMP\\vs_buildtools.exe
+ADD https://aka.ms/vs/stable/vs_BuildTools.exe C:\\TEMP\\vs_buildtools.exe
 RUN C:\\TEMP\vs_buildtools.exe --quiet --wait --norestart --nocache \
     --installPath "C:\\BuildTools" \
     --add "Microsoft.VisualStudio.Workload.VCTools;includeRecommended"
+
+USER ContainerUser
 
 WORKDIR C:\\workspace
 
