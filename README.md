@@ -39,13 +39,12 @@ The `scripts/` directory contains helper scripts used for common tasks during de
   ```
 
 - **`ClangTidy.ps1`**  
-  Runs `clang-tidy` against the build's `compile_commands.json` or a list of files. Example:
+  Runs `clang-tidy` against the build's `compile_commands.json` and optionally a list of files. Example:
   ```powershell
-  ./scripts/ClangTidy.ps1 -BuildPath ./out/build/release/ -Files "src/file1.cpp,src/file2.cpp"
+  ./scripts/ClangTidy.ps1 -CompileCommandsPath ./out/build/release/
   ```
-  or to use the compile commands in Build directory:
-  ```powershell
-  ./scripts/ClangTidy.ps1 -BuildPath ./out/build/release/
+- ```powershell
+  ./scripts/ClangTidy.ps1 -CompileCommandsPath ./out/build/release/ -Files ./executable/source/main.cpp,./library/source/library.cpp
   ```
 
 - **`Package.ps1`**  

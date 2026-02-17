@@ -1,7 +1,7 @@
 param(
     [Parameter(Mandatory)]
     [string]
-    $BuildPath,
+    $CompileCommandsPath,
 
     [string[]]
     $Files = @()
@@ -9,14 +9,17 @@ param(
 
 $RepoRoot = "$PSScriptRoot/.."
 
-if (!($Files)) {
-    $CompileCommandsPath = Join-Path $BuildPath "compile_commands.json"
-    if (Test-Path $CompileCommandsPath) {
+if (Test-Path $CompileCommandsPath -PathType Container) {
+        $CompileCommandsPath = Join-Path $CompileCommandsPath "compile_commands.json"
+}
+if (Test-Path $CompileCommandsPath -PathType Leaf) {
+    if (!($Files)) {
         $CompileCommands = Get-Content $CompileCommandsPath | ConvertFrom-Json
         $Files = $CompileCommands | ForEach-Object { $_.file }
-    } else {
-        $Files = Get-ChildItem $RepoRoot -Recurse -Filter *.cpp,*.h
     }
+} else {
+    Write-Error "Could not find compile_commands.json at $CompileCommandsPath"
+    exit 1
 }
 
-clang-tidy -p $BuildPath $Files
+clang-tidy -p $CompileCommandsPath $Files
