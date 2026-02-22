@@ -60,6 +60,14 @@
         "CMAKE_C_COMPILER": "clang",
         "CMAKE_CXX_CLANG_TIDY": "clang-tidy"
       }
+    },
+    {
+      "name": "code-coverage",
+      "displayName": "Code Coverage",
+      "inherits": "debug-clang",
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-fprofile-instr-generate -fcoverage-mapping"
+      }
     }
   ],
   "buildPresets": [
@@ -72,6 +80,11 @@
       "name": "release",
       "displayName": "Release",
       "configurePreset": "release"
+    },
+    {
+      "name": "code-coverage",
+      "displayName": "Code Coverage",
+      "configurePreset": "code-coverage"
     }
   ],
   "testPresets": [
@@ -88,6 +101,15 @@
       "name": "release",
       "configurePreset": "release",
       "displayName": "Release",
+      "output": {
+        "outputOnFailure": true,
+        "shortProgress": true
+      }
+    },
+    {
+      "name": "code-coverage",
+      "configurePreset": "code-coverage",
+      "displayName": "Code Coverage",
       "output": {
         "outputOnFailure": true,
         "shortProgress": true
