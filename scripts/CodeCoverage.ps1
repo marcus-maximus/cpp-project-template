@@ -3,7 +3,7 @@ Param(
     $BuildDir = "$PSScriptRoot/../out/build/code-coverage",
 
     [string]
-    $TargetBinary = "$BuildDir/executable/executable.exe",
+    $TargetBinary = "$BuildDir/executable/executable$(if ($IsWindows) { '.exe' } else { '' })",
 
     [switch]
     $ShowSummary,
