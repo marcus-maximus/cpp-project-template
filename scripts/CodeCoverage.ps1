@@ -1,12 +1,22 @@
 Param(
-	[string]
-	$BuildDir = "$PSScriptRoot/../out/build/code-coverage",
+    [string]
+    $BuildDir = "$PSScriptRoot/../out/build/code-coverage",
 
-	[string]
-	$TargetExecutable = "$BuildDir/executable/executable.exe"
+    [string]
+    $TargetBinary = "$BuildDir/executable/executable.exe",
+
+    [switch]
+    $ShowSummary,
+
+    [switch]
+    $GenerateHtmlReport
 )
 
 $coverageDataDir = "$BuildDir/coverage_data"
+
+if (Test-Path -Path $coverageDataDir) {
+    Remove-Item -Recurse $coverageDataDir/*
+}
 
 $env:LLVM_PROFILE_FILE = "$coverageDataDir/coverage_pid%p.profraw"
 cmake --preset code-coverage
@@ -17,4 +27,9 @@ $profRawFiles = Get-ChildItem -Path $coverageDataDir -Filter "coverage_pid*.prof
 llvm-profdata merge -sparse $profRawFiles -o $coverageDataDir/coverage.profdata
 Remove-Item -Path $profRawFiles
 
-llvm-cov show $TargetExecutable -instr-profile="$coverageDataDir/coverage.profdata"
+if ($ShowSummary) {
+    llvm-cov report $TargetBinary -instr-profile="$coverageDataDir/coverage.profdata"
+}
+if ($GenerateHtmlReport) {
+    llvm-cov show $TargetBinary -instr-profile="$coverageDataDir/coverage.profdata" -format="html" -output-dir="$coverageDataDir/html"
+}
