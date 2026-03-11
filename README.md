@@ -35,7 +35,7 @@ The `scripts/` directory contains helper scripts used for common tasks during de
 - **`ClangFormat.ps1`**  
   Runs `clang-format` in various modes: check formatting, edit files in place, or show diffs. Example:
   ```powershell
-  ./scripts/ClangFormat.ps1 -Path .\library\ -Mode Check
+  ./scripts/ClangFormat.ps1 -Path ./library/ -Mode Check
   ```
 
 - **`ClangTidy.ps1`**  
@@ -45,6 +45,15 @@ The `scripts/` directory contains helper scripts used for common tasks during de
   ```
 - ```powershell
   ./scripts/ClangTidy.ps1 -CompileCommandsPath ./out/build/release/ -Files ./executable/source/main.cpp,./library/source/library.cpp
+  ```
+
+- **`CodeCoverage.ps1`**  
+  Generates a code coverage report of a binary (executable or library) and running tests with ctest. Example:
+  ```powershell
+  ./scripts/CodeCoverage.ps1 -ShowSummary
+  ```
+  ```powershell
+  ./scripts/CodeCoverage.ps1 -TargetBinary ./out/build/code-coverage/library/library.lib -ShowSummary -GenerateHtmlReport
   ```
 
 - **`Package.ps1`**  
