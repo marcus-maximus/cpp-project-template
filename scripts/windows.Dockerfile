@@ -7,7 +7,8 @@ RUN powershell -Command Set-ExecutionPolicy Bypass -Scope Process -Force; \
 RUN choco install -y pwsh && \
     choco install -y git --params "/GitOnlyOnPath /NoGitLfs /NoShellIntegration" && \
     choco install -y cmake --installargs "ADD_CMAKE_TO_PATH=System" && \
-    choco install -y ninja
+    choco install -y ninja && \
+    choco install -y llvm
 
 ADD https://aka.ms/vs/stable/vs_BuildTools.exe C:\\TEMP\\vs_buildtools.exe
 RUN C:\\TEMP\vs_buildtools.exe --quiet --wait --norestart --nocache \
