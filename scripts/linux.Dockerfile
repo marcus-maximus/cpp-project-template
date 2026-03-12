@@ -9,6 +9,13 @@ RUN curl -L -o /tmp/cmake-4.2.3-linux-x86_64.sh \
     /bin/sh /tmp/cmake-4.2.3-linux-x86_64.sh --skip-license --prefix=/usr/local && \
     rm -f /tmp/cmake-4.2.3-linux-x86_64.sh
 
+RUN if [ -e /usr/bin/llvm-profdata-18 ] && [ ! -e /usr/bin/llvm-profdata ]; then \
+      ln -s /usr/bin/llvm-profdata-18 /usr/bin/llvm-profdata; \
+    fi || true && \
+    if [ -e /usr/bin/llvm-cov-18 ] && [ ! -e /usr/bin/llvm-cov ]; then \
+      ln -s /usr/bin/llvm-cov-18 /usr/bin/llvm-cov; \
+    fi || true
+
 ARG USER_ID=1000
 ARG GROUP_ID=1000
 
