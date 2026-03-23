@@ -12,7 +12,8 @@ RUN choco install -y pwsh && \
 ADD https://aka.ms/vs/stable/vs_BuildTools.exe C:\\TEMP\\vs_buildtools.exe
 RUN C:\\TEMP\vs_buildtools.exe --quiet --wait --norestart --nocache \
     --installPath "C:\\BuildTools" \
-    --add "Microsoft.VisualStudio.Workload.VCTools;includeRecommended"
+    --add "Microsoft.VisualStudio.Workload.VCTools;includeRecommended" \
+    --add "Microsoft.VisualStudio.ComponentGroup.NativeDesktop.Llvm.Clang"
 
 USER ContainerUser
 
