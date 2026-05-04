@@ -9,8 +9,8 @@ target_sources(library
 		source/library.cpp
 )
 
-target_compile_features(library PUBLIC cxx_std_20)
-target_compile_options(library PRIVATE 
+target_compile_features(library PUBLIC cxx_std_23)
+target_compile_options(library PRIVATE
 	$<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
 	$<$<CXX_COMPILER_ID:GNU,Clang>:-Wall -Wextra -Werror>
 )
